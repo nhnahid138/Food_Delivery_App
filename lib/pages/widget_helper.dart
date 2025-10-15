@@ -16,4 +16,16 @@ class appWidget{
       color: Colors.black38,
     );
   }
+
+
+  static TextStyle colorboldText(double size, Color color){
+    return TextStyle(
+      fontSize: size,
+      fontWeight: FontWeight.bold,
+      color: color,
+    );
+  }
+
+
+
 }
