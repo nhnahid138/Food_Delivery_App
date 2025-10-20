@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:food/pages/bottom_nevigation.dart';
 import 'package:food/pages/home.dart';
 import 'package:food/pages/signUp.dart';
+import 'package:food/pages/theme.dart';
 import 'package:food/pages/widget_helper.dart';
 
 class logIn extends StatefulWidget {
@@ -33,8 +34,8 @@ class _logInState extends State<logIn> {
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     colors: [
-                      Colors.pink,
-                      Colors.pinkAccent,
+                      Colors.indigo,
+                      Colors.indigoAccent,
                     ],
                   )
 
@@ -103,7 +104,6 @@ class _logInState extends State<logIn> {
                           ),
                         ),
                         SizedBox(height: 5,),
-
                         Container(
                           alignment: Alignment.centerRight,
                             child: GestureDetector(
@@ -120,7 +120,7 @@ class _logInState extends State<logIn> {
                         },
                           style: ButtonStyle(
                             elevation: MaterialStatePropertyAll(5),
-                            backgroundColor: MaterialStatePropertyAll(Colors.pink),
+                            backgroundColor: MaterialStatePropertyAll(appColor),
                           ),
                             child: Text("Log In",style: appWidget.colorboldText(20, Colors.white)),
                         ),

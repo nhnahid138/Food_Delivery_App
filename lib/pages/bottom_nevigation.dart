@@ -2,6 +2,7 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:food/pages/signUp.dart';
+import 'package:food/pages/theme.dart';
 
 import 'home.dart';
 import 'order.dart';
@@ -45,7 +46,7 @@ class _bottomNevState extends State<bottomNev> {
     return Scaffold(
       bottomNavigationBar: CurvedNavigationBar(
         backgroundColor: Colors.transparent,
-        color: Colors.black,
+        color: appColor,
         height: 60,
         animationDuration: Duration(milliseconds: 500),
         items: <Widget>[

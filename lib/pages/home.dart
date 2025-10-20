@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:food/pages/logIn.dart';
+import 'package:food/pages/theme.dart';
 import 'package:food/pages/widget_helper.dart';
 
 import 'Details.dart';
@@ -41,7 +42,7 @@ class _homeState extends State<home> {
                       onTap: (){Navigator.push(context, MaterialPageRoute(builder: (context)=>logIn()));},
                       child: Container(
                         decoration: BoxDecoration(
-                          color:Colors.black,
+                          color:appColor,
                           borderRadius: BorderRadius.circular(10)
                         ),
                         child: Padding(
@@ -88,7 +89,7 @@ class _homeState extends State<home> {
                         elevation: 5,
                         child: Container(
                           decoration: BoxDecoration(
-                            color:icecream?Colors.black:Colors.white,
+                            color:icecream?appColor:Colors.white,
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Padding(

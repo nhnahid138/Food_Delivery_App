@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:food/pages/logIn.dart';
+import 'package:food/pages/theme.dart';
 import 'package:food/pages/widget_helper.dart';
 
 class signUp extends StatefulWidget {
@@ -33,8 +34,8 @@ class _signUpState extends State<signUp> {
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                       colors: [
-                        Colors.pink,
-                        Colors.pinkAccent,
+                        Colors.indigo,
+                        Colors.indigoAccent,
                       ],
                     )
 
@@ -126,7 +127,7 @@ class _signUpState extends State<signUp> {
                         ElevatedButton(onPressed: (){},
                           style: ButtonStyle(
                             elevation: MaterialStatePropertyAll(5),
-                            backgroundColor: MaterialStatePropertyAll(Colors.pink),
+                            backgroundColor: MaterialStatePropertyAll(appColor),
                           ),
                           child: Text("Sign Up",style: appWidget.colorboldText(20, Colors.white)),
                         ),
