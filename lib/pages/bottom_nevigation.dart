@@ -36,9 +36,7 @@ class _bottomNevState extends State<bottomNev> {
     profilePage=profile();
     signUpPage=signUp();
     orderPage=order();
-    pages=[homePage,orderPage,walletPage
-      //, profilePage
-    ,signUpPage];
+    pages=[homePage,orderPage,walletPage, profilePage];
   }
 
   @override
@@ -46,14 +44,14 @@ class _bottomNevState extends State<bottomNev> {
     return Scaffold(
       bottomNavigationBar: CurvedNavigationBar(
         backgroundColor: Colors.transparent,
-        color: appColor,
+        color: Colors.indigo[900]!,
         height: 60,
         animationDuration: Duration(milliseconds: 500),
         items: <Widget>[
-          Icon(CupertinoIcons.home,color: isHome? Colors.amber:Colors.white,),
-          Icon(Icons.shopping_bag_outlined,color:isOrder? Colors.amber: Colors.white,),
-          Icon(Icons.wallet,color: isWallet? Colors.amber: Colors.white,),
-          Icon(CupertinoIcons.person,color:isProfile?Colors.amber: Colors.white,),
+          Icon(CupertinoIcons.home,color:Colors.white,),
+          Icon(Icons.shopping_bag_outlined,color: Colors.white,),
+          Icon(Icons.wallet,color: Colors.white,),
+          Icon(CupertinoIcons.person,color:Colors.white,),
         ],
         onTap: (index) {
           setState(() {

@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:food/pages/getdetail.dart';
 import 'package:food/pages/logIn.dart';
 import 'package:food/pages/theme.dart';
 import 'package:food/pages/widget_helper.dart';
@@ -13,9 +16,71 @@ class signUp extends StatefulWidget {
 
 class _signUpState extends State<signUp> {
 
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
   final TextEditingController _emailController=TextEditingController();
   final TextEditingController _passwordController=TextEditingController();
-  final TextEditingController _confirmPasswordController=TextEditingController(); // Added controller
+  final TextEditingController _confirmPasswordController=TextEditingController();
+  final TextEditingController location=TextEditingController();
+  bool isLoading=false;
+  Future<void> signUpUser()async{
+    try{
+      setState(() {
+        isLoading=true;
+      });
+    String email=_emailController.text.trim();
+    String password=_passwordController.text.trim();
+    String confirmPassword=_confirmPasswordController.text.trim();
+    if(email.isEmpty || password.isEmpty || confirmPassword.isEmpty){
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Please fill all the fields"))
+      );
+      return;
+    }else if(password!=confirmPassword){
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Passwords do not match"))
+      );
+      return;
+    }else{
+      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+
+      User? user = userCredential.user;
+      if (user == null) return;
+
+      await _firestore.collection('users').doc(user.uid).set({
+        'uid': user.uid,
+        'name': 'Set Name ?',
+        'email': user.email,
+        'photoURL': '',
+        'createdAt': DateTime.now(),
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Account created successfully!")),
+      );
+
+      _emailController.clear();
+      _passwordController.clear();
+      _confirmPasswordController.clear();
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>getDetail()));
+
+    }
+    }on FirebaseAuthException catch(e){
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Error: $e"))
+      );
+    }finally{
+      setState(() {
+        isLoading=false;
+      });
+    }
+
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,88 +118,89 @@ class _signUpState extends State<signUp> {
                   color: Colors.white,
                   borderRadius: BorderRadius.only(topLeft: Radius.circular(70),topRight: Radius.circular(70),
                   ),),
-                child: Container(
-                  alignment: Alignment.topCenter,
-                  margin: EdgeInsets.only(top: MediaQuery.of(context).size.height/2.5),
-                  child: GestureDetector(
-                    onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=>logIn()));
-                    },
-                    child: Text("Already Have An Account ! Log In",
-                    style: appWidget.colorboldText(18, Colors.blue),),
-                  ),
-                ),
 
               ),
-              Container(
-                margin: EdgeInsets.only(top:MediaQuery.of(context).size.height/5,
-                  left: (screenWidth-(screenWidth/1.2))/2,
-                ),
-                height: MediaQuery.of(context).size.height/2,
-                width: MediaQuery.of(context).size.width/1.2,
+              Column(
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(top:MediaQuery.of(context).size.height/5,
+                      left: (screenWidth-(screenWidth/1.2))/2,
+                    ),
+                    //height: MediaQuery.of(context).size.height/2,
+                    width: MediaQuery.of(context).size.width/1.2,
 
-                decoration: BoxDecoration(
-                ),
-                child: Material(
-                  elevation: 5,
-                  borderRadius: BorderRadius.all(Radius.circular(20)),
-                  color: Colors.white,
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text("Sign Up",style: appWidget.colorboldText(24, Colors.black),),
-                        SizedBox(height: 20,),
-                        TextField(
-                          controller: _emailController,
-                          decoration: InputDecoration(
-                            labelText: "Email",
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(20)),
-                            ),
+                    decoration: BoxDecoration(
+                    ),
+                    child: Material(
+                      elevation: 5,
+                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                      color: Colors.white,
+                      child: Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text("Sign Up",style: appWidget.colorboldText(24, Colors.black),),
+                            SizedBox(height: 20,),
+                            TextField(
+                              controller: _emailController,
+                              decoration: InputDecoration(
+                                labelText: "Email",
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                                ),
 
-                          ),
-                        ),
-                        SizedBox(height: 20,),
-                        TextField(
-                          controller: _passwordController,
-                          decoration: InputDecoration(
-                            labelText: "Password",
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(20)),
+                              ),
                             ),
-                          ),
-                        ),
-                        SizedBox(height: 20,),
-                        TextField(
-                          controller: _confirmPasswordController, // Use correct controller
-                          decoration: InputDecoration(
-                            labelText: "Confirm Password",
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(20)),
+                            SizedBox(height: 20,),
+                            TextField(
+                              controller: _passwordController,
+                              decoration: InputDecoration(
+                                labelText: "Password",
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                                ),
+                              ),
                             ),
-                          ),
+                            SizedBox(height: 20,),
+                            TextField(
+                              controller: _confirmPasswordController, // Use correct controller
+                              decoration: InputDecoration(
+                                labelText: "Confirm Password",
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 5,),
+                            SizedBox(height: 10,),
+                            isLoading?CircularProgressIndicator():
+                            ElevatedButton(
+                              onPressed:signUpUser,
+                              style: ButtonStyle(
+                                elevation: MaterialStatePropertyAll(5),
+                                backgroundColor: MaterialStatePropertyAll(appColor),
+                              ),
+                              child: Text("Sign Up",style: appWidget.colorboldText(20, Colors.white)),
+                            ),
+                          ],
                         ),
-                        SizedBox(height: 5,),
-
-                        Container(
-                            alignment: Alignment.centerRight,
-                            child: Text("Forgot Password?",
-                              style: TextStyle(color: Colors.blue,fontWeight: FontWeight.bold),)
-                        ),
-                        SizedBox(height: 10,),
-                        ElevatedButton(onPressed: (){},
-                          style: ButtonStyle(
-                            elevation: MaterialStatePropertyAll(5),
-                            backgroundColor: MaterialStatePropertyAll(appColor),
-                          ),
-                          child: Text("Sign Up",style: appWidget.colorboldText(20, Colors.white)),
-                        ),
-                      ],
+                      ),
                     ),
                   ),
-                ),
+                  SizedBox(height: 20,),
+                  Container(
+                    padding: EdgeInsets.only(left: 35),
+                    child: GestureDetector(
+                      onTap: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>logIn()));
+                      },
+                      child: Text("Already Have An Account ! Log In",
+                        style: appWidget.colorboldText(18, Colors.blue),),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

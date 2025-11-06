@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:food/pages/logIn.dart';
+import 'package:food/pages/signUp.dart';
 import 'package:food/pages/widget_helper.dart';
 
 import 'bottom_nevigation.dart';
@@ -23,6 +25,7 @@ class _onBoardState extends State<onBoard> {
     _pageController.dispose();
     super.dispose();
   }
+  bool isLastPage = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,7 +35,7 @@ class _onBoardState extends State<onBoard> {
           Expanded(
             child: PageView.builder(
               controller: _pageController,
-                itemCount:content.length,
+              itemCount:content.length,
                 onPageChanged: (int index){
                   setState(() {
                     currentIndex=index;
@@ -78,12 +81,15 @@ class _onBoardState extends State<onBoard> {
             padding: const EdgeInsets.only(bottom: 40),
             child: ElevatedButton(onPressed: (){
               setState(() {
+                if(currentIndex==content.length-2){
+                  isLastPage=true;
+                }
                if(currentIndex<content.length-1){ currentIndex++;}else{
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>bottomNev()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>signUp()));
                }
               });
             },
-                child: Text("Next",style: appWidget.colorboldText(20, Colors.white),),
+                child: isLastPage? Text("Get Started",style: appWidget.colorboldText(20, Colors.white),): Text("Next",style: appWidget.colorboldText(20, Colors.white),),
             style: ButtonStyle(
                 elevation: MaterialStatePropertyAll(5),
                 backgroundColor: MaterialStatePropertyAll(Colors.blue),

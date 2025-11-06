@@ -1,9 +1,21 @@
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        // Use a stable google-services Gradle plugin version
+        classpath("com.google.gms:google-services:4.4.0")
+    }
+}
+
 allprojects {
     repositories {
         google()
         mavenCentral()
     }
 }
+
 
 val newBuildDir: Directory =
     rootProject.layout.buildDirectory

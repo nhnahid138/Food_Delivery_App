@@ -1,5 +1,15 @@
 # Miscellaneous
 *.class
+getdetail.dart
+database.dart
+cart.dart
+admin.dart
+payment.dart
+addProduct.dart
+adminBottomNev.dart
+adminOrder.dart
+adminProfile.dart
+dashboard.dart
 *.log
 *.pyc
 *.swp

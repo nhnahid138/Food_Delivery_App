@@ -5,4 +5,4 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:food/pages/signUp.dart';
 
-Color appColor = Colors.black;
+Color appColor = Colors.indigo[900]!;
