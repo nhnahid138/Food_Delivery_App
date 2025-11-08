@@ -7,7 +7,8 @@ import 'package:food/pages/widget_helper.dart';
 int? quantity;
 
 class Details extends StatefulWidget {
-  const Details({super.key});
+  final String? productId;
+  const Details({super.key, this.productId});
 
   @override
   State<Details> createState() => _DetailsState();
@@ -15,8 +16,16 @@ class Details extends StatefulWidget {
 
 class _DetailsState extends State<Details> {
   int count=1;
+  String? pid;
   String? tk;
   int?tkTotal;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    pid=widget.productId;
+
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,6 +72,7 @@ class _DetailsState extends State<Details> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(item['title'],style: TextStyle(fontSize: 24,fontWeight: FontWeight.bold),),
+                                Text(widget.productId!,style: TextStyle(fontSize: 24,fontWeight: FontWeight.bold),),
                                 Text('TK ${item['price']}',style: TextStyle(fontSize: 24,fontWeight: FontWeight.bold,color: Colors.blue),),
 
                               ],

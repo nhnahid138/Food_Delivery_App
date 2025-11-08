@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -23,7 +25,8 @@ class _orderState extends State<order> {
   Map? orderData={};
   List items=[];
   int? total;
-  int? orderid=1123;
+  String? orderId;
+  int? orderDetails;
 
   @override
   void initState() {
@@ -70,6 +73,22 @@ class _orderState extends State<order> {
 
   }
 
+  Color statusColor(String status) {
+    if (status == 'processing') {
+      return Colors.orange;
+    } else if (status == 'Shipped') {
+      return Colors.green;
+    } else if (status == 'Out for Delivery') {
+      return Colors.blue;
+    } else if (status == 'Delivered') {
+      return Colors.green;
+    } else if( status == 'Cancelled') {
+      return Colors.red;
+    } else {
+      return Colors.grey;
+    }
+  }
+
 
 
 
@@ -81,10 +100,11 @@ class _orderState extends State<order> {
       ),
       body:ListView.builder(
         itemCount: orders!.length,
-        itemBuilder: (context,ind) {
+        itemBuilder: (context,index) {
+          final ind = orders!.length - 1 - index;
+          orderId=orders![ind]['orderId'];
           order = orders![ind]['items']??[];
           total=orders![ind]['total'];
-          orderid=orderid!+ind;
 
 
           return Padding(
@@ -102,15 +122,15 @@ class _orderState extends State<order> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text('Order Id: #QFD$orderid',style: appWidget.boldText(20),),
+                              Text('Order Id: $orderId',style: appWidget.boldText(20),),
                               Container(
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20)),
-                                  color: Colors.deepPurple,
+                                  color: statusColor(orders![ind]['status']),
                                 ),
                                 child: Padding(
-                                  padding: const EdgeInsets.only(top:5,bottom:5,left:10,right:10),
-                                  child: Text('Processing',style: appWidget.colorboldText(15, Colors.white),),
+                                  padding: const EdgeInsets.only(top:5,bottom:8,left:15,right:10),
+                                  child: Text(orders![ind]['status'],style: appWidget.colorboldText(15, Colors.white),),
                                 ),
                               )
                             ],
@@ -130,6 +150,7 @@ class _orderState extends State<order> {
 
 
 
+
                             return Padding(
                               padding: const EdgeInsets.only(left: 10,bottom: 10,right: 10),
                               child: Row(
@@ -145,8 +166,10 @@ class _orderState extends State<order> {
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          Flexible(
-                                              child: Text(item['title'],style: appWidget.boldText(20),)
+                                          Container(
+                                            //color: Colors.red,
+                                            width: 220,
+                                            child: Text(item['title'],style: appWidget.boldText(20),),
                                           ),
                                           Text('Qty: $quantity',style: appWidget.boldText(16),),
                                         ],
@@ -169,21 +192,142 @@ class _orderState extends State<order> {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.deepPurple ,
-                                      borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20),topRight:Radius.circular(20) ),
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(5.0),
-                                      child: Row(
-                                        children: [
-                                          Text(' Order Details ' ,style: appWidget.colorboldText(16, Colors.white)),
-                                          Icon(CupertinoIcons.info,color: Colors.white,size: 18,)
-                                        ],
-                                      ),
-                                    ),
+                                  GestureDetector(
 
+
+
+                                    onTap: () {
+                                      setState(() {
+                                        orderDetails=ind;
+                                      });
+                                      showModalBottomSheet(
+                                        context: context,
+                                        isScrollControlled: true, // lets us control height
+                                        backgroundColor: Colors.white,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                                        ),
+                                        builder: (context) {
+                                          return SizedBox(
+                                            height: 300, // half screen
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Container(
+                                                  decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius.only(
+                                                      topLeft: Radius.circular(20),
+                                                      topRight: Radius.circular(20),
+                                                    ),
+                                                    color: Colors.indigo[900],
+                                                  ),
+                                                  child: Align(
+                                                    alignment: Alignment.topRight,
+                                                    child: Row(
+                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                      children: [
+                                                        Padding(
+                                                          padding: const EdgeInsets.only(left: 10.0),
+                                                          child: Text('Order Details ${orders![ind]['orderId']}',style: appWidget.colorboldText(20, Colors.white)),
+                                                        ),
+                                                        IconButton(
+                                                          icon: Icon(Icons.close,color: Colors.white),
+                                                          onPressed: () {
+                                                            Navigator.pop(context); // closes the bottom sheet
+                                                          },
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets.all(8.0),
+                                                  child: Column(
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      Text('Name : ${orders![ind]['name']}',style:TextStyle(fontSize: 20),),
+                                                      Text('Phone : ${orders![ind]['phone']}',style:TextStyle(fontSize: 20),),
+                                                      Text('Address : ${orders![ind]['address']}',style:TextStyle(fontSize: 20),),
+                                                      Row(
+                                                        children: [
+                                                          Text('Status : ',style:TextStyle(fontSize: 20,)
+                                                          ),
+                                                          Text(orders![ind]['status'],style:TextStyle(fontSize: 20,
+                                                              fontWeight: FontWeight.bold,
+                                                              color: statusColor(orders![ind]['status'])
+                                                          ),),
+                                                        ],
+                                                      ),
+                                                      Text('Order Time : ${orders![ind]['date'].toDate().toString()}',style:TextStyle(fontSize: 20),),
+                                                      Text(
+                                                        'Shipped Time : ${orders?[ind]['shippedTime'] != null
+                                                            ? (orders![ind]['shippedTime'] as Timestamp).toDate().toString()
+                                                            : 'Not shipped yet'}',
+                                                        style: TextStyle(fontSize: 20),
+                                                      ),
+                                                      SizedBox(height: 10,),
+                                                      GestureDetector(
+                                                        onTap: () async {
+                                                          // Cancel order logic
+                                                          setState(() {
+                                                            final adminOrderRef = FirebaseFirestore.instance
+                                                                .collection('admin')
+                                                                .doc('order')
+                                                                .collection('userOrder');
+
+// Replace 'orderu' with the order ID you want to update
+                                                            adminOrderRef.doc(orders![ind]['orderId']).update({
+                                                              'status': 'Cancelled', // new status
+                                                            });
+
+                                                            orders![ind]['status'] = 'Cancelled';
+                                                          });
+                                                          // Update in Firestore
+                                                          await FirebaseFirestore.instance
+                                                              .collection('users')
+                                                              .doc(user!.uid)
+                                                              .update({'order': orders});
+                                                          Navigator.pop(context); // Close bottom sheet
+                                                        },
+                                                        child: Material(
+                                                          borderRadius: BorderRadius.circular(20),
+                                                          color: Colors.red,
+                                                          elevation: 5,
+                                                          child: Container(
+                                                            alignment: Alignment.center,
+                                                            width: MediaQuery.of(context).size.width,
+
+                                                            height: 40,
+                                                            child: Text('Cancel Order',style: appWidget.colorboldText(20, Colors.white)),
+                                                          ),
+                                                        ),
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        },
+                                      );
+                                    },
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.indigo[900] ,
+                                        borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20),topRight:Radius.circular(20) ),
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(5.0),
+                                        child: Row(
+                                          children: [
+                                            Text(' Order Details ' ,style: appWidget.colorboldText(16, Colors.white)),
+                                            Icon(CupertinoIcons.info,color: Colors.white,size: 18,)
+                                          ],
+                                        ),
+                                      ),
+
+                                    ),
                                   ),
                                  // ElevatedButton(onPressed: (){},
                                      // child:Text('Order Details') ),

@@ -4,7 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:food/pages/cart.dart';
 import 'package:food/pages/logIn.dart';
+import 'package:food/pages/product_details.dart';
 import 'package:food/pages/theme.dart';
+import 'package:food/pages/user_cart.dart';
 import 'package:food/pages/widget_helper.dart';
 
 import 'Details.dart';
@@ -36,6 +38,7 @@ class _homeState extends State<home> {
   String? address;
   List? items=[];
   String? selectedCategory;
+  List<Map<String, dynamic>> products = [];
 
 
   @override
@@ -43,7 +46,26 @@ class _homeState extends State<home> {
     super.initState();
     fetchData();
     productDetails();
+    fetchProducts();
   }
+
+
+  Future<void> fetchProducts() async {
+    QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection('admin')
+        .doc('product')
+        .collection('productCollection')
+        .get();
+
+
+    for (var doc in snapshot.docs) {
+      products.add(doc.data() as Map<String, dynamic>);
+    }
+  }
+
+
+
+
   Future<void> productDetails()async{
 
     try{
@@ -68,12 +90,12 @@ class _homeState extends State<home> {
 
 
   }
-  List? selectedItems=[0,1,2,3,4];
+  List? selectedItems=[0,1];
 
   Future<void> selected() async {
     selectedItems=[];
-    for(int i=0;i<items!.length;i++){
-      var item=items![i];
+    for(int i=0;i<products.length;i++){
+      var item=products[i];
       if(item['category']==selectedCategory){
       setState(() {
         selectedItems!.add(i);
@@ -119,8 +141,7 @@ class _homeState extends State<home> {
   }
 
 
-
-
+  bool isSelected=false;
 
   bool icecream=false;
   bool pizza=false;
@@ -177,7 +198,7 @@ class _homeState extends State<home> {
                       ),
                     ),
                     GestureDetector(
-                      onTap: (){Navigator.push(context, MaterialPageRoute(builder: (context)=>cart()));},
+                      onTap: (){Navigator.push(context, MaterialPageRoute(builder: (context)=>user_cart()));},
                       child: Container(
                         decoration: BoxDecoration(
                           color:Colors.indigo[900],
@@ -216,11 +237,12 @@ class _homeState extends State<home> {
                     GestureDetector(
                       onTap: (){
                         setState(() {
-                          icecream=true;
+                          icecream?icecream=false:icecream=true;
                           pizza=false;
                           salad=false;
                           burger=false;
                           selectedCategory="icecream";
+                          //isSelected?isSelected=false:isSelected=true;
                           selected();
                         });
                       },
@@ -246,10 +268,11 @@ class _homeState extends State<home> {
                       onTap: (){
                         setState(() {
                           icecream=false;
-                          pizza=true;
+                          pizza?pizza=false:pizza=true;
                           salad=false;
                           burger=false;
                           selectedCategory="pizza";
+                          //isSelected?isSelected=false:isSelected=true;
                           selected();
                         });
                       },
@@ -275,9 +298,10 @@ class _homeState extends State<home> {
                         setState(() {
                           icecream=false;
                           pizza=false;
-                          salad=true;
+                          salad?salad=false:salad=true;
                           burger=false;
                           selectedCategory="salad";
+                          //isSelected?isSelected=false:isSelected=true;
                           selected();
                         });
                       },
@@ -304,8 +328,9 @@ class _homeState extends State<home> {
                           icecream=false;
                           pizza=false;
                           salad=false;
-                          burger=true;
+                          burger?burger=false:burger=true;
                           selectedCategory="burger";
+                          //isSelected?isSelected=false:isSelected=true;
                           selected();
                         });
                       },
@@ -329,119 +354,164 @@ class _homeState extends State<home> {
                   ],
                 ),
               ),
+
+
+
+
+
+
               SizedBox(height: 20,),
               Text('Popular Now',style: appWidget.boldText(22),),
               isproductLoading?Container(
-                height: 250,
-                alignment: Alignment.center, width: MediaQuery.of(context).size.width,
+                  height: 250,
+                  alignment: Alignment.center, width: MediaQuery.of(context).size.width,
                   child: CircularProgressIndicator(color: Colors.red,
 
-              )):SizedBox(
+                  )):SizedBox(
                 height: 280,
-                child: ListView.builder(
-                   // scrollDirection: Axis.horizontal,
-                  scrollDirection: Axis.horizontal,
-                  itemCount:selectedItems!.length,
-                  itemBuilder: (context,index) {
-                    var item=items![selectedItems![index]];
-                    return GestureDetector(
-                      onTap: (){
-                        setState(() {
-                          selectedDetailIndex=selectedItems![index];
+                child: StreamBuilder<QuerySnapshot>(
+                  stream: FirebaseFirestore.instance
+                      .collection('admin')
+                      .doc('product')
+                      .collection('productCollection')
+                      .snapshots(),
+                  builder: (context, asyncSnapshot) {
+                    if (!asyncSnapshot.hasData) {
+                      return Center(child: CircularProgressIndicator(),);
+                    }
 
-                        });
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=>Details()));
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Material(
-                          elevation: 5,
-                          borderRadius: BorderRadius.circular(30),
-                          child: Container(
-                            margin: EdgeInsets.only(right: 20,left: 20,top: 10,bottom: 10),
-                            //color: Colors.blue,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Image.network(item['image'],height: 150,
-                                width: 150,fit: BoxFit.fill,),
-                                Column(
-                                 // crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(item['title'],style:appWidget.boldText(20),),
-                                    Text(item['subtitle'],style: appWidget.subText(15),),
-                                    Text("TK ${item['price']}",style: appWidget.boldText(20),)
+                    if(pizza==true||burger==true||salad==true||icecream==true){
+                      isSelected=true;
+                    }else{isSelected=false;}
+                    final allProducts = asyncSnapshot.data!.docs;
+                    List<int> pd=[];
+                      for(int i=0;i<allProducts.length;i++){
+                      var item=allProducts[i];
+                      if(isSelected){
 
-                                  ],
-                                )
 
-                              ],
+                      if(item['category']==selectedCategory){
+                        pd.add(i);
+                      }}else{
+                        pd.add(i);
+                      }
+
+
+                    }
+
+
+
+                    return ListView.builder(
+                      // scrollDirection: Axis.horizontal,
+                        scrollDirection: Axis.horizontal,
+                        itemCount:pd.length,
+                        itemBuilder: (context,index) {
+                          int itemIndex=pd[index];
+
+                          var allProduct=allProducts[itemIndex];
+                          return GestureDetector(
+                            onTap: (){
+                              Navigator.push(context, MaterialPageRoute(builder: (context)=>pDetails(productId:allProduct['productId'],)));
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Material(
+                                elevation: 5,
+                                borderRadius: BorderRadius.circular(30),
+                                child: Container(
+                                  margin: EdgeInsets.only(right: 20,left: 20,top: 10,bottom: 10),
+                                  //color: Colors.blue,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Image.network(allProduct['image'],height: 150,
+                                        width: 150,fit: BoxFit.fill,),
+                                      Column(
+                                        // crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(allProduct['title'],style:appWidget.boldText(20),),
+                                          Text(allProduct['subtitle'],style: appWidget.subText(15),),
+                                          Text("TK ${allProduct['price']}",style: appWidget.boldText(20),)
+
+                                        ],
+                                      )
+
+                                    ],
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                      ),
+                          );
+
+
+
+
+                        }
                     );
-
-
-
-
                   }
                 ),
               ),
-              StreamBuilder<DocumentSnapshot>(stream: FirebaseFirestore.instance.collection('admin')
-                  .doc('product').snapshots(),
+
+
+
+
+              StreamBuilder<QuerySnapshot>(
+                  stream: FirebaseFirestore.instance
+                      .collection('admin')
+                      .doc('product')
+                      .collection('productCollection')
+                      .snapshots(),
                   builder: (context,snapshot){
-                if(!snapshot.hasData){
-                  return Center(child: CircularProgressIndicator(),);}
-                var data=snapshot.data!.data() as Map<String,dynamic>;
-                List items=data['item'];
-                return ListView.builder(
-                  itemCount:items.length ,
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(), 
-                  itemBuilder: (BuildContext context, int index) {
-                    var item=items[index];
-                    return GestureDetector(
-                        onTap:(){
-                          setState(() {
-                            selectedDetailIndex=index;
-                          });
-                          Navigator.push(context, MaterialPageRoute(builder: (context)=>Details()));
-                        },
-                        child: Container(
-                          margin: EdgeInsets.only(right: 20,bottom: 10),
-                          child: Material(
-                            elevation: 5,
-                            borderRadius: BorderRadius.circular(10),
-                            child: Container(
-                              child: Row(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(10.0),
-                                    child: Image.network(item['image'],
-                                      height: 120,
-                                      width: 120,
-                                      fit: BoxFit.cover,),
-                                  ),
-                                  SizedBox(width: 20,),
-                                  Container(
-                                      height: 130,
-                                      width: 170,
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text(item['title'],style: appWidget.boldText(20),),
-                                          Text(item['subtitle'],style: appWidget.subText(15),),
-                                          Text('TK ${item['price']}',style: appWidget.boldText(20),),
-                                        ],
-                                      ))
-                                ],
+                    if(!snapshot.hasData){
+                      return Center(child: CircularProgressIndicator(),);}
+                    final snapProducts = snapshot.data!.docs;
+                    return ListView.builder(
+                      itemCount:snapProducts.length,
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemBuilder: (BuildContext context, int index) {
+                        var item=snapProducts[index];
+                        return GestureDetector(
+                          onTap:(){
+                            setState(() {
+                              selectedDetailIndex=index;
+                            });
+                            Navigator.push(context, MaterialPageRoute(builder: (context)=>pDetails(productId: products[index]['productId'],)));
+                          },
+                          child: Container(
+                            margin: EdgeInsets.only(right: 20,bottom: 10),
+                            child: Material(
+                              elevation: 5,
+                              borderRadius: BorderRadius.circular(10),
+                              child: Container(
+                                child: Row(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: Image.network(item['image'],
+                                        height: 120,
+                                        width: 120,
+                                        fit: BoxFit.cover,),
+                                    ),
+                                    SizedBox(width: 20,),
+                                    Container(
+                                        height: 130,
+                                        width: 170,
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(item['title'],style: appWidget.boldText(20),),
+                                            Text(item['subtitle'],style: appWidget.subText(15),),
+                                            Text('TK ${item['price']}',style: appWidget.boldText(20),),
+                                          ],
+                                        ))
+                                  ],
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      );
+                        );
 
 
 
@@ -456,10 +526,185 @@ class _homeState extends State<home> {
 
 
 
-                  },
-                );
+                      },
+                    );
 
-                  })
+                  }),
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+              // SizedBox(height: 20,),
+              // Text('Popular Now',style: appWidget.boldText(22),),
+              // isproductLoading?Container(
+              //   height: 250,
+              //   alignment: Alignment.center, width: MediaQuery.of(context).size.width,
+              //     child: CircularProgressIndicator(color: Colors.red,
+              //
+              // )):SizedBox(
+              //   height: 280,
+              //   child: ListView.builder(
+              //      // scrollDirection: Axis.horizontal,
+              //     scrollDirection: Axis.horizontal,
+              //     itemCount:selectedItems!.length,
+              //     itemBuilder: (context,index) {
+              //       var item=items![selectedItems![index]];
+              //       return GestureDetector(
+              //         onTap: (){
+              //           setState(() {
+              //             selectedDetailIndex=selectedItems![index];
+              //
+              //           });
+              //           Navigator.push(context, MaterialPageRoute(builder: (context)=>Details()));
+              //         },
+              //         child: Padding(
+              //           padding: const EdgeInsets.all(8.0),
+              //           child: Material(
+              //             elevation: 5,
+              //             borderRadius: BorderRadius.circular(30),
+              //             child: Container(
+              //               margin: EdgeInsets.only(right: 20,left: 20,top: 10,bottom: 10),
+              //               //color: Colors.blue,
+              //               child: Column(
+              //                 crossAxisAlignment: CrossAxisAlignment.center,
+              //                 children: [
+              //                   Image.network(item['image'],height: 150,
+              //                   width: 150,fit: BoxFit.fill,),
+              //                   Column(
+              //                    // crossAxisAlignment: CrossAxisAlignment.start,
+              //                     children: [
+              //                       Text(item['title'],style:appWidget.boldText(20),),
+              //                       Text(item['subtitle'],style: appWidget.subText(15),),
+              //                       Text("TK ${item['price']}",style: appWidget.boldText(20),)
+              //
+              //                     ],
+              //                   )
+              //
+              //                 ],
+              //               ),
+              //             ),
+              //           ),
+              //         ),
+              //       );
+              //
+              //
+              //
+              //
+              //     }
+              //   ),
+              // ),
+              // StreamBuilder<DocumentSnapshot>(stream: FirebaseFirestore.instance.collection('admin')
+              //     .doc('product').snapshots(),
+              //     builder: (context,snapshot){
+              //   if(!snapshot.hasData){
+              //     return Center(child: CircularProgressIndicator(),);}
+              //   var data=snapshot.data!.data() as Map<String,dynamic>;
+              //   List items=data['item'];
+              //   return ListView.builder(
+              //     itemCount:items.length ,
+              //     shrinkWrap: true,
+              //     physics: NeverScrollableScrollPhysics(),
+              //     itemBuilder: (BuildContext context, int index) {
+              //       var item=items[index];
+              //       return GestureDetector(
+              //           onTap:(){
+              //             setState(() {
+              //               selectedDetailIndex=index;
+              //             });
+              //             Navigator.push(context, MaterialPageRoute(builder: (context)=>Details()));
+              //           },
+              //           child: Container(
+              //             margin: EdgeInsets.only(right: 20,bottom: 10),
+              //             child: Material(
+              //               elevation: 5,
+              //               borderRadius: BorderRadius.circular(10),
+              //               child: Container(
+              //                 child: Row(
+              //                   children: [
+              //                     Padding(
+              //                       padding: const EdgeInsets.all(10.0),
+              //                       child: Image.network(item['image'],
+              //                         height: 120,
+              //                         width: 120,
+              //                         fit: BoxFit.cover,),
+              //                     ),
+              //                     SizedBox(width: 20,),
+              //                     Container(
+              //                         height: 130,
+              //                         width: 170,
+              //                         child: Column(
+              //                           mainAxisAlignment: MainAxisAlignment.center,
+              //                           crossAxisAlignment: CrossAxisAlignment.start,
+              //                           children: [
+              //                             Text(item['title'],style: appWidget.boldText(20),),
+              //                             Text(item['subtitle'],style: appWidget.subText(15),),
+              //                             Text('TK ${item['price']}',style: appWidget.boldText(20),),
+              //                           ],
+              //                         ))
+              //                   ],
+              //                 ),
+              //               ),
+              //             ),
+              //           ),
+              //         );
+              //
+              //
+              //
+              //
+              //
+              //
+              //
+              //
+              //
+              //
+              //
+              //
+              //
+              //
+              //     },
+              //   );
+              //
+              //     })
 
               
             ],

@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:food/pages/signUp.dart';
 import 'package:food/pages/theme.dart';
+import 'package:food/pages/user_order.dart';
 
 import 'home.dart';
 import 'order.dart';
@@ -22,7 +23,7 @@ class _bottomNevState extends State<bottomNev> {
   int currentIndex=0;
   late wallet walletPage;
   late profile profilePage;
-  late order orderPage;
+  late userOrder orderPage;
   late signUp signUpPage;
   bool isHome=false;
   bool isWallet=false;
@@ -35,7 +36,7 @@ class _bottomNevState extends State<bottomNev> {
     walletPage=wallet();
     profilePage=profile();
     signUpPage=signUp();
-    orderPage=order();
+    orderPage=userOrder();
     pages=[homePage,orderPage,walletPage, profilePage];
   }
 

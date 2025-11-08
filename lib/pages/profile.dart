@@ -8,6 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:food/pages/admin.dart';
 import 'package:food/pages/logIn.dart';
+import 'package:food/pages/user_order.dart';
 import 'package:food/pages/widget_helper.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
@@ -267,22 +268,27 @@ class _profileState extends State<profile> {
                     ],
                   ),
                 ),
-                Column(
-                  children: [
-                    Material(
-                      borderRadius: BorderRadius.circular(10),
-                      elevation: 5,
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Container(
-        
-                          child: Icon(Icons.wallet,size: 40,),
+                GestureDetector(
+                  onTap: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>userOrder()));
+                  },
+                  child: Column(
+                    children: [
+                      Material(
+                        borderRadius: BorderRadius.circular(10),
+                        elevation: 5,
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Container(
+
+                            child: Icon(Icons.wallet,size: 40,),
+                          ),
                         ),
                       ),
-                    ),
-                    SizedBox(height: 5,),
-                    Text("To Pay",style: TextStyle(fontWeight: FontWeight.bold),),
-                  ],
+                      SizedBox(height: 5,),
+                      Text("To Pay",style: TextStyle(fontWeight: FontWeight.bold),),
+                    ],
+                  ),
                 ),
         
                 Column(
