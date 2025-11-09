@@ -9,7 +9,6 @@ addProduct.dart
 adminBottomNev.dart
 adminOrder.dart
 adminProfile.dart
-dashboard.dart
 *.log
 *.pyc
 *.swp
