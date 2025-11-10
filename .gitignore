@@ -3,7 +3,6 @@
 getdetail.dart
 database.dart
 cart.dart
-admin.dart
 payment.dart
 addProduct.dart
 adminBottomNev.dart

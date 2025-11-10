@@ -45,7 +45,6 @@ class _homeState extends State<home> {
   void initState() {
     super.initState();
     fetchData();
-    productDetails();
     fetchProducts();
   }
 
@@ -63,34 +62,7 @@ class _homeState extends State<home> {
     }
   }
 
-
-
-
-  Future<void> productDetails()async{
-
-    try{
-    setState(() {
-      isproductLoading=true;
-    });
-    DocumentSnapshot poc= await FirebaseFirestore.
-    instance.collection('admin').doc('product').get();
-    setState(() {
-      var data = poc.data() as Map<String, dynamic>? ?? <String, dynamic>{};
-      items = data['item'] ?? [];
-
-    });
-
-    }catch(e){
-      print("Error fetching product details: $e");
-    }finally{
-      setState(() {
-        isproductLoading=false;
-      });
-    }
-
-
-  }
-  List? selectedItems=[0,1];
+  List? selectedItems=[];
 
   Future<void> selected() async {
     selectedItems=[];
@@ -411,6 +383,7 @@ class _homeState extends State<home> {
                           var allProduct=allProducts[itemIndex];
                           return GestureDetector(
                             onTap: (){
+
                               Navigator.push(context, MaterialPageRoute(builder: (context)=>pDetails(productId:allProduct['productId'],)));
                             },
                             child: Padding(

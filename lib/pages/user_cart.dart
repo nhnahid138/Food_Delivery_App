@@ -277,9 +277,6 @@ class _user_cartState extends State<user_cart> {
                         List cartItems = data['cart'] ?? [];
                         // fetch product prices synchronously is not possible here, so show placeholder and compute again below
                       }
-
-                      // Better: compute subtotal by refetching product docs synchronously here as well (simple approach):
-                      // Note: For simplicity and to avoid nested async in the bottom area here, we'll display amounts using a FutureBuilder
                       return FutureBuilder<int>(
                         future: _computeSubtotalForCurrentUser(),
                         builder: (context, snap) {

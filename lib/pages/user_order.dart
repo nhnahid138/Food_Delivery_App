@@ -31,46 +31,12 @@ class _orderState extends State<userOrder> {
   void initState() {
     super.initState();
     setState(() {
-      getOrderDetails();
-      productDetails();
 
     });
   }
 
-  Future<void> productDetails()async{
-    DocumentSnapshot poc= await FirebaseFirestore.
-    instance.collection('admin').doc('product').get();
-    setState(() {
-      var data = poc.data() as Map<String, dynamic>? ?? <String, dynamic>{};
-      items = data['item'] ?? [];
-
-    });
-
-  }
-
-  Future<void> getOrderDetails() async {
-    try{
-      DocumentSnapshot doc = await FirebaseFirestore.
-      instance.collection('users').doc(user!.uid).get();
 
 
-      setState(() {
-        orderData = doc.data() as Map<String, dynamic>? ?? <String, dynamic>{};
-        orders = orderData!['order']??[];
-
-
-
-      });
-
-
-
-
-    }catch(e){
-      print("Error fetching order details: $e");
-    }
-
-
-  }
 
   Color statusColor(String status) {
     if (status == 'processing') {
@@ -108,6 +74,7 @@ class _orderState extends State<userOrder> {
           return ListView.builder(
               itemCount: snapOrders.length,
               itemBuilder: (context,index) {
+                index=snapOrders.length - 1 - index;
                 var snapOrder = snapOrders[index];
                 List orderItems=snapOrder['items'];
                 var totalp =snapOrder['total'];
