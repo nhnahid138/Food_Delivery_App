@@ -2,8 +2,6 @@
 *.class
 getdetail.dart
 database.dart
-cart.dart
-payment.dart
 addProduct.dart
 adminBottomNev.dart
 adminOrder.dart

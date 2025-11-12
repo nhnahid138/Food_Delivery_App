@@ -28,7 +28,7 @@ class _dashboardState extends State<dashboard> {
                     children: [
                       CircleAvatar(
                         radius: 20,
-                        backgroundImage: AssetImage('img/boy.jpg'),
+                        backgroundImage: AssetImage('img/333.jpg'),
                       ),
                       SizedBox(width: 10,),
                       Column(
