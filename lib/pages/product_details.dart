@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:food/pages/bottom_nevigation.dart';
 import 'package:food/pages/home.dart';
 import 'package:food/pages/widget_helper.dart';
 int? quantity;
@@ -20,6 +21,7 @@ class _DetailsState extends State<pDetails> {
   String? tk;
   int?tkTotal;
   Map? productData = {};
+  bool isAdded=false;
   @override
   void initState() {
     // TODO: implement initState
@@ -190,56 +192,45 @@ class _DetailsState extends State<pDetails> {
                                   ElevatedButton(onPressed: ()async{
                                     var user=FirebaseAuth.instance.currentUser!;
                                     quantity=count;
+                                    try{
+                                      setState(() {
+                                        isAdded=true;
 
-                                    await FirebaseFirestore.instance.collection('users')
-                                    .doc(user.uid).update({
-                                      'cart': FieldValue.arrayUnion([{
-                                        'quantity':count,
-                                        'productId': widget.productId}
-                                      ]),
+                                      });
 
-                                    });
-                                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Added to cart"),));
+                                      await FirebaseFirestore.instance.collection('users')
+                                          .doc(user.uid).update({
+                                        'cart': FieldValue.arrayUnion([{
+                                          'quantity':count,
+                                          'productId': widget.productId}
+                                        ]),
+
+                                      });
+
+                                    }catch(e){
+                                      print(e);
+                                    }finally{
+                                      setState(() {
+                                        isAdded=false;
+
+                                      });
+
+                                    }
+
+                                    isAdded?null:ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("added to cart"),));
 
 
 
-
-
-                                    //
-                                    // await FirebaseFirestore.instance.collection('users').doc(user.uid).update({
-                                    //   'cart': FieldValue.arrayUnion([{
-                                    //     'quantity':count,
-                                    //     'itemIndex': selectedDetailIndex}
-                                    //   ]),
-                                    // });
-                                    // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Added to cart"),));
-                                    //
-
-
-                                    await FirebaseFirestore.instance.
-                                    collection('users')
-                                        .doc(user.uid)
-                                        .collection('order')
-                                        .doc('nahid')
-                                        .set({
-                                      'items': '',
-                                      'status': 'processing',
-                                      'total': '',
-                                      'paymentMethod': 'selectedPayment',
-                                      'name': 'name',
-                                      'phone': 'phone',
-                                      'address': 'address',
-                                      'orderId': 'uniqueOrderId',
-                                      'date': DateTime.now(),
-                                      'shippedTime':null,
-                                    });
+                                    isAdded? null: Navigator.push(context, MaterialPageRoute(builder: (context)=>bottomNev()));
 
 
 
 
 
 
-                                  }, child: Text("Add to cart",style: TextStyle(
+                                  }, child: isAdded?CircularProgressIndicator(
+                                    color: Colors.white,
+                                  ):Text("Add to cart",style: TextStyle(
                                     color: Colors.white,
                                   ),),
                                     style: ButtonStyle(

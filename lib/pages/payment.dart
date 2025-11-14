@@ -7,6 +7,7 @@ import 'package:food/pages/cart.dart';
 import 'package:food/pages/database.dart';
 import 'package:food/pages/home.dart';
 import 'package:food/pages/order.dart';
+import 'package:food/pages/user_order.dart';
 import 'package:food/pages/widget_helper.dart';
 
 class payment extends StatefulWidget {
@@ -545,7 +546,7 @@ class _paymentState extends State<payment> {
                           SnackBar(content: Text('Failed to save: $e')),
                         );
                       }finally{
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=>order()));
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>userOrder()));
 
                         setState(() {
                           isLoading=false;

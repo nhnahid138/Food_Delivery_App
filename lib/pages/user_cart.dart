@@ -258,7 +258,7 @@ class _user_cartState extends State<user_cart> {
 
           // bottom summary fixed area
           Padding(
-            padding: const EdgeInsets.all(20.0),
+            padding: const EdgeInsets.all(0.0),
             child: Align(
               alignment: Alignment.bottomCenter,
               child: Column(
@@ -281,62 +281,74 @@ class _user_cartState extends State<user_cart> {
                         future: _computeSubtotalForCurrentUser(),
                         builder: (context, snap) {
                           int computedSubtotal = snap.data ?? 0;
-                          final int delivery = deliveryCharge;
+                          final int delivery = computedSubtotal==0?0:deliveryCharge;
                           final int totalPrice = computedSubtotal + delivery;
-                          return Column(
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          return Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+
+                            ),
+
+                            width: MediaQuery.of(context).size.width,
+                            child: Padding(
+                              padding: const EdgeInsets.all(20),
+                              child: Column(
                                 children: [
                                   Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Text('SubTotal: ', style: appWidget.colorboldText(20, Colors.black)),
-                                      Text('(Including Tax) ', style: appWidget.subText(15)),
+                                      Row(
+                                        children: [
+                                          Text('SubTotal: ', style: appWidget.colorboldText(20, Colors.black)),
+                                          Text('(Including Tax) ', style: appWidget.subText(15)),
+                                        ],
+                                      ),
+                                      Text('TK $computedSubtotal', style: appWidget.colorboldText(20, Colors.black))
                                     ],
                                   ),
-                                  Text('TK $computedSubtotal', style: appWidget.colorboldText(20, Colors.black))
-                                ],
-                              ),
-                              SizedBox(height: 6),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text('Delivery Charge: ', style: appWidget.boldText(15)),
-                                  Text('TK $delivery', style: appWidget.colorboldText(15, Colors.black))
-                                ],
-                              ),
-                              SizedBox(height: 6),
-                              Container(
-                                alignment: Alignment.topRight,
-                                width: appWidth,
-                                child: Container(
-                                  height: 3,
-                                  width: 80,
-                                  color: Colors.deepPurple,
-                                ),
-                              ),
-                              SizedBox(height: 6),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text('Total Price: ', style: appWidget.colorboldText(22, Colors.deepPurple)),
-                                  Text('TK $totalPrice', style: appWidget.colorboldText(20, Colors.deepPurple))
-                                ],
-                              ),
-                              SizedBox(height: 8),
-                              Container(
-                                width: appWidth,
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) => payment(totalpay: totalPrice,)));
-                                  },
-                                  child: Text("Proceed to Pay", style: appWidget.colorboldText(20, Colors.white)),
-                                  style: ButtonStyle(
-                                    backgroundColor: MaterialStatePropertyAll(Colors.deepPurple),
+                                  SizedBox(height: 6),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text('Delivery Charge: ', style: appWidget.boldText(15)),
+                                      Text('TK $delivery', style: appWidget.colorboldText(15, Colors.black))
+                                    ],
                                   ),
-                                ),
-                              )
-                            ],
+                                  SizedBox(height: 6),
+                                  Container(
+                                    alignment: Alignment.topRight,
+                                    width: appWidth,
+                                    child: Container(
+                                      height: 3,
+                                      width: 80,
+                                      color: Colors.deepPurple,
+                                    ),
+                                  ),
+                                  SizedBox(height: 6),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text('Total Price: ', style: appWidget.colorboldText(22, Colors.deepPurple)),
+                                      Text('TK $totalPrice', style: appWidget.colorboldText(20, Colors.deepPurple))
+                                    ],
+                                  ),
+                                  SizedBox(height: 8),
+                                  Container(
+                                    width: appWidth,
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => payment(totalpay: totalPrice,)));
+                                      },
+                                      child: Text("Proceed to Pay", style: appWidget.colorboldText(20, Colors.white)),
+                                      style: ButtonStyle(
+                                        backgroundColor: MaterialStatePropertyAll(Colors.deepPurple),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
                           );
                         },
                       );

@@ -7,6 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:food/main.dart';
+import 'package:food/pages/bottom_nevigation.dart';
 import 'package:food/pages/cart.dart';
 import 'package:food/pages/home.dart';
 import 'package:food/pages/widget_helper.dart';
@@ -62,6 +63,14 @@ class _orderState extends State<userOrder> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Order Details'),
+        automaticallyImplyLeading: false,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new),
+          onPressed: () {
+           Navigator.push(context, MaterialPageRoute(builder: (context) => bottomNev()));
+          },
+        ),
+
       ),
       body:StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance.collection('users').doc(user!.uid)
