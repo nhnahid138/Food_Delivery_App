@@ -3,7 +3,6 @@
 getdetail.dart
 database.dart
 addProduct.dart
-adminBottomNev.dart
 adminOrder.dart
 adminProfile.dart
 *.log
