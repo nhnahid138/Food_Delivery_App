@@ -47,7 +47,7 @@ class _orderState extends State<userOrder> {
     } else if (status == 'Out for Delivery') {
       return Colors.blue;
     } else if (status == 'Delivered') {
-      return Colors.green;
+      return Colors.blue;
     } else if( status == 'Cancelled') {
       return Colors.red;
     } else {

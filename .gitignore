@@ -3,8 +3,6 @@
 getdetail.dart
 database.dart
 addProduct.dart
-adminOrder.dart
-adminProfile.dart
 *.log
 *.pyc
 *.swp

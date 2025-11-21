@@ -424,6 +424,10 @@ class _homeState extends State<home> {
                   }
                 ),
               ),
+              SizedBox(height: 10,),
+              Text('All Products',style: appWidget.boldText(22),),
+              SizedBox(height: 10,),
+
 
 
 
@@ -439,6 +443,7 @@ class _homeState extends State<home> {
                       return Center(child: CircularProgressIndicator(),);}
                     final snapProducts = snapshot.data!.docs;
                     return ListView.builder(
+                      padding: EdgeInsets.zero,
                       itemCount:snapProducts.length,
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
