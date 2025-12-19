@@ -96,16 +96,102 @@ class _logInState extends State<logIn> {
                   color: Colors.white,
                   borderRadius: BorderRadius.only(topLeft: Radius.circular(70),topRight: Radius.circular(70),
                 ),),
-                child: Container(
-                  margin: EdgeInsets.only(bottom: MediaQuery.of(context).size.height/3.2),
-                  alignment: Alignment.bottomCenter,
-                    child: isAdmin?Text("Welcome Admin !",
-                      style: appWidget.colorboldText(20, Colors.blue),):GestureDetector(
+                child: Column(
+                  //mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(bottom: MediaQuery.of(context).size.height/3.2),
+                      alignment: Alignment.center,
+                        child: isAdmin?Text("Welcome Admin !",
+                          style: appWidget.colorboldText(20, Colors.blue),):
+                        GestureDetector(
+                          onTap: (){
+                            Navigator.push(context, MaterialPageRoute(builder: (context)=>signUp()));
+                          },
+                            child: Text("Don't Have An Acccount ! Sign Up",
+                              style: appWidget.colorboldText(18, Colors.blue),))
+                    ),
+                    GestureDetector(
                       onTap: (){
                         Navigator.push(context, MaterialPageRoute(builder: (context)=>signUp()));
                       },
-                        child: Text("Don't Have An Acccount ! Sign Up",
-                          style: appWidget.colorboldText(18, Colors.blue),))),
+
+                      child: Container(
+                         child:  isAdmin?Text("Welcome Admin !",
+                           style: appWidget.colorboldText(20, Colors.blue),):Text("Don't Have An Acccount ! Sign Up",
+                            style: appWidget.colorboldText(18, Colors.blue),)
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Material(
+                      color: Colors.white,
+                      elevation: 5,
+                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                      child: Container(
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 20,right: 20,bottom: 20,top: 8),
+                          child: Column(
+                            children: [
+                              Column(
+                                  children: [
+                                  //  Text('This section is created only',style: TextStyle(color: Colors.redAccent,fontSize: 15,fontWeight: FontWeight.bold),),
+                                    Text('Only App Showcasing purpose',style: TextStyle(color: Colors.redAccent,fontSize: 20,fontWeight: FontWeight.bold),),
+
+                                  ],
+                                ),
+
+
+                              SizedBox(height: 15),
+                              GestureDetector(
+                                onTap: (){
+                                  _emailController.text='guest@gmail.com';
+                                 _passwordController.text='guest123';
+
+                                  logInUser();
+                                },
+                                child: Material(
+                                  color: Colors.white,
+                                  elevation: 10,
+                                  shadowColor: Colors.indigoAccent,
+                                  borderRadius: BorderRadius.all(Radius.circular(30)),
+
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Text("Log In As Guest",style: appWidget.colorboldText(20, Colors.indigo[900]!),),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 20),
+                              GestureDetector(
+                                onTap: (){
+                                  setState(() {
+                                    isAdmin=true;
+                                  });
+                                  _emailController.text='nhnahid138@gmail.com';
+                                  _passwordController.text='mynameisnahid1';
+
+                                  logInUser();
+                                },
+                                child: Material(
+                                  color: Colors.white,
+                                  elevation: 10,
+                                  shadowColor: Colors.indigoAccent,
+                                  borderRadius: BorderRadius.all(Radius.circular(30)),
+
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Text("Log In As Admin",style: appWidget.colorboldText(20, Colors.indigo[900]!),),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+
+                  ],
+                ),
               ),
               Container(
                 margin: EdgeInsets.only(top:MediaQuery.of(context).size.height/5,
@@ -186,7 +272,7 @@ class _logInState extends State<logIn> {
                             child: AnimatedContainer(duration: Duration(seconds: 2),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.all(Radius.circular(30)),
-                                color: isAdmin?Colors.pink[900]:Colors.deepPurple,
+                                color: isAdmin?Colors.pink[900]:Colors.indigo[900],
                               ),
                               alignment: Alignment.center,
 

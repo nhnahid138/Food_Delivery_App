@@ -1,14 +1,10 @@
 # Miscellaneous
 *.class
-getdetail.dart
-database.dart
-addProduct.dart
 *.log
 *.pyc
 *.swp
 .DS_Store
 .atom/
-.build/
 .buildlog/
 .history
 .svn/

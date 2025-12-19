@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:food/pages/widget_helper.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 
@@ -161,17 +162,16 @@ class _adminState extends State<admin> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Add Item',style: appWidget.colorboldText(40, Colors.white),),
+        centerTitle: true,
+        backgroundColor: Colors.pink[900],
+      ),
 
       body:Stack(
         children: [
           Container(
-            child: Container(
-              margin: EdgeInsets.only(top: 35,left: 65),
-                child: Text('ADD ITEM',style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 60,
-                  fontWeight: FontWeight.bold,
-                ),)),
+
             alignment: Alignment.topLeft,
           color: Colors.pink[900],
           height: MediaQuery.of(context).size.height/2,
@@ -190,7 +190,7 @@ class _adminState extends State<admin> {
 
           SingleChildScrollView(
             child: Container(
-              margin: EdgeInsets.only(top: 110,left: 25),
+              margin: EdgeInsets.only(top: 10,left: 25),
               child: Material(
                 elevation: 5,
                 borderRadius: BorderRadius.circular(30),
@@ -206,6 +206,62 @@ class _adminState extends State<admin> {
                       mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+
+                        Material(
+                          borderRadius: BorderRadius.circular(20),
+                          elevation: 5,
+                          child: Container(
+                            child: Stack(
+                              children: [
+                                imageloading?Center(child: CircularProgressIndicator()): image!=null?
+                                Image.network(image!,height: 200,
+                                  width: 200,fit: BoxFit.cover,
+                                ):Image.asset('img/product2.png'),
+                                Container(
+                                  alignment: Alignment.bottomRight,
+                                  child: GestureDetector(
+                                    onTap: (){
+                                      setState(()async {
+                                        setState(() {
+                                          imageloading=true;
+                                        });
+                                        await uploadImg();
+
+                                      });
+
+                                    },
+                                    child: Container(
+                                        decoration: BoxDecoration(
+                                            color: Colors.pink[900],
+                                            borderRadius: BorderRadius.only(topLeft: Radius.circular(20))
+                                        ),
+
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(10.0),
+                                          child: Icon(CupertinoIcons.camera_fill,color: Colors.white,),
+                                        )),
+                                  ),
+                                ),
+                              ],
+                            )
+                            ,
+                            height: 200,
+                            width: 200,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.pink[900]!,
+                                width: 2,
+                              ),
+                              //borderRadius: BorderRadius.circular(20),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 20,),
+
+
+
+
+
                         TextField(
                           controller: title,
                           decoration: InputDecoration(
@@ -271,56 +327,6 @@ class _adminState extends State<admin> {
                             ),
                           ),
                         ),
-                        Material(
-                          borderRadius: BorderRadius.circular(20),
-                          elevation: 5,
-                          child: Container(
-                            child: Stack(
-                              children: [
-                               imageloading?Center(child: CircularProgressIndicator()): image!=null?
-                                Image.network(image!,height: 200,
-                                  width: 200,fit: BoxFit.cover,
-                                ):Text("Select a Image"),
-                                Container(
-                                  alignment: Alignment.bottomRight,
-                                  child: GestureDetector(
-                                    onTap: (){
-                                      setState(()async {
-                                        setState(() {
-                                          imageloading=true;
-                                        });
-                                        await uploadImg();
-              
-                                      });
-              
-                                    },
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                          color: Colors.pink[900],
-                                        borderRadius: BorderRadius.only(topLeft: Radius.circular(20))
-                                      ),
-              
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(10.0),
-                                          child: Icon(CupertinoIcons.camera_fill,color: Colors.white,),
-                                        )),
-                                  ),
-                                ),
-                              ],
-                            )
-                          ,
-                            height: 200,
-                            width: 200,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: Colors.pink[900]!,
-                                width: 2,
-                              ),
-                              //borderRadius: BorderRadius.circular(20),
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 20,),
                         ElevatedButton(onPressed: () async {
                           if(title.text.isEmpty||
                               subtitle.text.isEmpty||

@@ -36,6 +36,52 @@ class _profileState extends State<profile> {
     super.initState();
     fetchData();
   }
+  void _showBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(16),
+        ),
+      ),
+      builder: (context) {
+        return Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                'Contact Us',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 16),
+              ListTile(
+                leading: const Icon(Icons.location_on,color: Colors.red),
+                title: const Text('Kuril Bissowroad,Dhaka'),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.phone,color: Colors.green),
+                title: const Text('01770855830'),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.mail,color: Colors.blue),
+                title: const Text('nhnahid138@gmail.com'),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 
 
 
@@ -407,25 +453,30 @@ class _profileState extends State<profile> {
               ),
             ),
             SizedBox(height: 10,),
-            Container(
-              margin: EdgeInsets.only(left: 20,right: 20,),
-              child: Row(
-        
-                children: [
-                  Material(
-                    elevation: 5,
-                    borderRadius: BorderRadius.circular(30),
-                    child: CircleAvatar(
-                        backgroundColor: Colors.white,
-        
-                        child: Icon(Icons.phone_callback_rounded,size: 30,)),
-                  ),
-                  SizedBox(width: 10,),
-                  Text("Connect Us",style: TextStyle(
-                    fontSize: 25,
-                    fontWeight: FontWeight.bold,
-                  ),)
-                ],
+            GestureDetector(
+              onTap: (){
+                _showBottomSheet(context);
+              },
+              child: Container(
+                margin: EdgeInsets.only(left: 20,right: 20,),
+                child: Row(
+
+                  children: [
+                    Material(
+                      elevation: 5,
+                      borderRadius: BorderRadius.circular(30),
+                      child: CircleAvatar(
+                          backgroundColor: Colors.white,
+
+                          child: Icon(Icons.phone_callback_rounded,size: 30,)),
+                    ),
+                    SizedBox(width: 10,),
+                    Text("Connect Us",style: TextStyle(
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
+                    ),)
+                  ],
+                ),
               ),
             ),
             SizedBox(height: 10,),

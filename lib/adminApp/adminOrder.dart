@@ -5,6 +5,10 @@ import 'package:food/adminApp/adminBottomNev.dart';
 import 'package:food/pages/cart.dart';
 import 'package:food/pages/widget_helper.dart';
 
+
+
+
+
 class adminorder extends StatefulWidget {
   const adminorder({super.key});
 
@@ -13,7 +17,28 @@ class adminorder extends StatefulWidget {
 }
 
 class _adminorderState extends State<adminorder> {
-  bool isShipped=false;
+
+  Color status(String s){
+    if(s=='processing'){
+      return Colors.orange;
+    }
+    if(s=='Shipped'){
+      return Colors.green;
+    }
+    if(s=='Cancelled'){
+      return Colors.red;
+    }
+    if(s=='Delivered'){
+      return Colors.blue;
+    }else{
+      return Colors.grey;
+    }
+  }
+
+
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,8 +73,23 @@ class _adminorderState extends State<adminorder> {
           return ListView.builder(
               itemCount: documents.length,
               itemBuilder: (context, index) {
+                index=documents.length-1-index;
+                bool isShipped=false;
+                bool isDelivered=false;
+                bool isCanceled=false;
                 QueryDocumentSnapshot document = documents[index];
                 List items= document['items'];
+                if(document['status']=='Shipped'){
+                  isShipped=true;
+                }
+                if(document['status']=='Delivered'||document['status']=='Cancelled'){
+                  isDelivered=true;
+                }
+                if(document['status']=='Cancelled'){
+                  isCanceled=true;
+
+                }
+
 
 
               return Padding(
@@ -73,13 +113,13 @@ class _adminorderState extends State<adminorder> {
                                 Material(
                                   elevation: 5,
                                   shadowColor: Colors.blue,
-                                  color: Colors.amber[900],
+                                  color: status(document['status']),
                                   borderRadius: BorderRadius.circular(20),
 
                                   child: Container(
                                     child: Padding(
                                       padding: const EdgeInsets.all(8.0),
-                                      child: Text("processing",style: appWidget.colorboldText(10, Colors.white),),
+                                      child: Text('${document['status']}',style: appWidget.colorboldText(10, Colors.white),),
                                     ),
                                   ),
                                 )
@@ -207,35 +247,121 @@ class _adminorderState extends State<adminorder> {
 
                         Column(
                           children: [
+                            isDelivered?
+                            Material(
+                              elevation: 5,
+                              color:isCanceled?Colors.red: Colors.blue,
+                              borderRadius: BorderRadius.circular(20),
+                              child: Container(
+                                alignment: Alignment.center,
+                                width: MediaQuery.of(context).size.width,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child:
+                                      isCanceled?
+                                  Text('Order Cancelled',style: appWidget.colorboldText(10, Colors.white),):
+
+                                  Text('Successfully Delivered',style: appWidget.colorboldText(10, Colors.white),),
+                                ),
+
+                              ),
+                            ):
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
+
+
+                                isShipped?Material(
+                                  elevation: 5,
+                                  color: Colors.blue,
+                                  borderRadius: BorderRadius.circular(20),
+                                  child: GestureDetector(
+                                    onTap: (){
+                                      FirebaseFirestore.instance.collection('admin')
+                                          .doc('order').collection('userOrder').doc(document.id)
+                                          .update({
+                                        'status': 'Delivered',
+                                      });
+                                      FirebaseFirestore.instance.collection('users')
+                                          .doc(document['userId']).collection('orders').doc(document.id)
+                                          .update({
+                                        'status': 'Delivered',
+                                      });
+
+                                    },
+
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      width: (MediaQuery.of(context).size.width/2)-25,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text('Mark as Delivered',style: appWidget.colorboldText(10, Colors.white),),
+                                      ),
+
+                                    ),
+                                  ),
+                                ):
                                 Material(
                                   elevation: 5,
-                                  color: Colors.green,
+                                  color: Colors.blue,
                                   borderRadius: BorderRadius.circular(20),
-                                  child: Container(
-                                    alignment: Alignment.center,
-                                    width: (MediaQuery.of(context).size.width/2)-25,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text('Mark as Shipped',style: appWidget.colorboldText(10, Colors.white),),
-                                    ),
+                                  child: GestureDetector(
+                                    onTap: (){
+                                      FirebaseFirestore.instance.collection('admin')
+                                          .doc('order').collection('userOrder').doc(document.id)
+                                          .update({
+                                        'status': 'Shipped',
+                                      });
+                                      FirebaseFirestore.instance.collection('users')
+                                          .doc(document['userId']).collection('orders').doc(document.id)
+                                          .update({
+                                        'status': 'Shipped',
+                                      });
 
+                                    },
+
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      width: (MediaQuery.of(context).size.width/2)-25,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text('Mark as Shipped',style: appWidget.colorboldText(10, Colors.white),),
+                                      ),
+
+                                    ),
                                   ),
                                 ),
-                                Material(
-                                  elevation: 5,
-                                  color: Colors.red,
-                                  borderRadius: BorderRadius.circular(20),
-                                  child: Container(
-                                    alignment: Alignment.center,
-                                    width: (MediaQuery.of(context).size.width/2)-25,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text('Cancel Order',style: appWidget.colorboldText(10, Colors.white),),
-                                    ),
+                                GestureDetector(
 
+                                  onTap: (){
+                                    FirebaseFirestore.instance.collection('admin')
+                                        .doc('order').collection('userOrder').doc(document.id)
+                                        .update({
+                                      'status': 'Cancelled',
+                                    });
+                                    FirebaseFirestore.instance.collection('users')
+                                        .doc(document['userId']).collection('orders').doc(document.id)
+                                        .update({
+                                      'status': 'Cancelled',
+                                    });
+
+                                  },
+
+
+
+                                  child: Material(
+                                    elevation: 5,
+                                    color: Colors.red,
+                                    borderRadius: BorderRadius.circular(20),
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      width: (MediaQuery.of(context).size.width/2)-25,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text('Cancel Order',style: appWidget.colorboldText(10, Colors.white),),
+                                      ),
+
+                                    ),
                                   ),
                                 ),
                               ],

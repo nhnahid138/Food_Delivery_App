@@ -3,15 +3,29 @@ import 'package:food/pages/bottom_nevigation.dart';
 import 'package:food/pages/home.dart';
 import 'package:food/pages/onBoard.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:device_preview/device_preview.dart';
 import 'package:food/pages/widget_helper.dart';
+import 'firebase_options.dart';
 double? appHeight;
 double? appWidth;
 
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  runApp(const MyApp());
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  runApp(
+    DevicePreview(
+    enabled: true,
+      tools: const [
+        // Empty tools list disables customization UI
+      ],
+    builder: (context) =>
+    const MyApp(),
+
+  ),
+  );
 }
 
 class MyApp extends StatelessWidget {

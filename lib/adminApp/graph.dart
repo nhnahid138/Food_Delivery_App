@@ -41,6 +41,10 @@ class _SalesGraphWidgetState extends State<SalesGraphWidget> {
         // Reset before new calculation
         salesToday = List.filled(7, 0);
         ordersDelivered = List.filled(7, 0);
+        processingOrders= List.filled(7, 0);
+        shippingOrders= List.filled(7, 0);
+        deliveredOrders= List.filled(7, 0);
+
 
         for (int i=0;i<sales.length;i++){
           var sale=sales[i];
@@ -76,6 +80,50 @@ class _SalesGraphWidgetState extends State<SalesGraphWidget> {
 
 
         }
+
+
+        for (int i=0;i<sales.length;i++){
+          var sale=sales[i];
+          var date=sale['date'];
+          DateTime dateTime=date.toDate();
+          String formattedDate = DateFormat('yyyy-MM-dd').format(dateTime);
+          String weekend = DateFormat('EEE').format(dateTime);
+          int day = dateTime.weekday;
+          for(int j=0;j<7;j++){
+            String todayDate = DateFormat('yyyy-MM-dd').format(today.subtract(Duration(days: j)));
+            String week = DateFormat('EEE').format(today.subtract(Duration(days: j)));
+            days[6-j]=week;
+
+
+            if(formattedDate==todayDate && sale['status']=='processing') {
+              processingOrders[6-j]=processingOrders[6-j]+1;
+
+
+
+            }
+            if(formattedDate==todayDate && sale['status']=='Delivered') {
+              deliveredOrders[6-j]=deliveredOrders[6-j]+1;
+
+
+
+            }
+            if(formattedDate==todayDate && sale['status']=='Delivered') {
+              shippingOrders[6-j]=shippingOrders[6-j]+1;
+
+
+
+            }
+
+          }
+        }
+
+
+
+
+
+
+
+
         return Column(
           children: [
             const Text(

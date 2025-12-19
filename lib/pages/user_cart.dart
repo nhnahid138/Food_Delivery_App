@@ -322,15 +322,15 @@ class _user_cartState extends State<user_cart> {
                                     child: Container(
                                       height: 3,
                                       width: 80,
-                                      color: Colors.deepPurple,
+                                      color: Colors.indigo[900]!,
                                     ),
                                   ),
                                   SizedBox(height: 6),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Text('Total Price: ', style: appWidget.colorboldText(22, Colors.deepPurple)),
-                                      Text('TK $totalPrice', style: appWidget.colorboldText(20, Colors.deepPurple))
+                                      Text('Total Price: ', style: appWidget.colorboldText(22, Colors.indigo[900]!)),
+                                      Text('TK $totalPrice', style: appWidget.colorboldText(20, Colors.indigo[900]!))
                                     ],
                                   ),
                                   SizedBox(height: 8),
@@ -342,7 +342,7 @@ class _user_cartState extends State<user_cart> {
                                       },
                                       child: Text("Proceed to Pay", style: appWidget.colorboldText(20, Colors.white)),
                                       style: ButtonStyle(
-                                        backgroundColor: MaterialStatePropertyAll(Colors.deepPurple),
+                                        backgroundColor: MaterialStatePropertyAll(Colors.indigo[900]),
                                       ),
                                     ),
                                   )

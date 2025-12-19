@@ -8,8 +8,8 @@ class ubc{
 }
 
 List<ubc> content=[
-  ubc(image: "img/screen1.png", title: "Screen 1", description: "Description for Screen 1"),
-  ubc(image: "img/screen2.png", title: "Screen 2", description: "Description for Screen 2"),
-  ubc(image: "img/screen3.png", title: "Screen 3", description: "Description for Screen 3"),
+  ubc(image: "img/screen1.png", title: "Quick Foodie", description: "Get Food at Reasonable Price"),
+  ubc(image: "img/screen2.png", title: "Quick Foodie", description: "All Payment method available"),
+  ubc(image: "img/screen3.png", title: "Quick Foodie", description: "Get Fastest Delivery"),
 
 ];

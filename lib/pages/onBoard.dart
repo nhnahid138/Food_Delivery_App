@@ -85,7 +85,7 @@ class _onBoardState extends State<onBoard> {
                   isLastPage=true;
                 }
                if(currentIndex<content.length-1){ currentIndex++;}else{
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>signUp()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>logIn()));
                }
               });
             },
