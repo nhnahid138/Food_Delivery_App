@@ -16,15 +16,12 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(
-    DevicePreview(
-    enabled: true,
-      tools: const [
-        // Empty tools list disables customization UI
-      ],
-    builder: (context) =>
+    // DevicePreview(
+    // enabled: true,
+    // builder: (context) =>
     const MyApp(),
 
-  ),
+  // ),
   );
 }
 

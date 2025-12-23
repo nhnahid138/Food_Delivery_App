@@ -36,6 +36,30 @@ class _profileState extends State<profile> {
     super.initState();
     fetchData();
   }
+  void showComingSoonBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+
+      builder: (context) {
+        return SizedBox(
+          height: 200,
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Center(
+              child: Text(
+                'Coming Soon',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   void _showBottomSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -294,7 +318,7 @@ class _profileState extends State<profile> {
               children: [
                 GestureDetector(
                   onTap: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>admin()));
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>userOrder()));
                   },
                   child: Column(
                     children: [
@@ -337,58 +361,73 @@ class _profileState extends State<profile> {
                   ),
                 ),
         
-                Column(
-                  children: [
-                    Material(
-                      borderRadius: BorderRadius.circular(10),
-                      elevation: 5,
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Container(
-        
-                          child: Icon(Icons.fire_truck_sharp,size: 40,),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 5,),
-                    Text("To Ship",style: TextStyle(fontWeight: FontWeight.bold),),
-                  ],
-                ),
-                Column(
-                  children: [
-                    Material(
-                      elevation: 5,
-                      borderRadius: BorderRadius.circular(10),
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Container(
-                          decoration: BoxDecoration(
+                GestureDetector(
+                  onTap: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>userOrder()));
+                  },
+                  child: Column(
+                    children: [
+                      Material(
+                        borderRadius: BorderRadius.circular(10),
+                        elevation: 5,
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Container(
+
+                            child: Icon(Icons.fire_truck_sharp,size: 40,),
                           ),
-        
-                          child: Icon(Icons.shopping_bag,size: 40,),
                         ),
                       ),
-                    ),
-                    SizedBox(height: 5,),
-                    Text("Return",style: TextStyle(fontWeight: FontWeight.bold),),
-                  ],
+                      SizedBox(height: 5,),
+                      Text("To Ship",style: TextStyle(fontWeight: FontWeight.bold),),
+                    ],
+                  ),
                 ),
-                Column(
-                  children: [
-                    Material(
-                      borderRadius: BorderRadius.circular(10),
-                      elevation: 5,
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Container(
-        
-                          child: Icon(Icons.sms,size: 40,),
+                GestureDetector(
+                  onTap: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>userOrder()));
+                  },
+                  child: Column(
+                    children: [
+                      Material(
+                        elevation: 5,
+                        borderRadius: BorderRadius.circular(10),
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Container(
+                            decoration: BoxDecoration(
+                            ),
+
+                            child: Icon(Icons.shopping_bag,size: 40,),
+                          ),
                         ),
                       ),
-                    ),
-                    SizedBox(height: 5,),
-                    Text("Review",style: TextStyle(fontWeight: FontWeight.bold),),
-                  ],
+                      SizedBox(height: 5,),
+                      Text("Return",style: TextStyle(fontWeight: FontWeight.bold),),
+                    ],
+                  ),
+                ),
+                GestureDetector(
+                  onTap: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>userOrder()));
+                  },
+                  child: Column(
+                    children: [
+                      Material(
+                        borderRadius: BorderRadius.circular(10),
+                        elevation: 5,
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Container(
+
+                            child: Icon(Icons.sms,size: 40,),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 5,),
+                      Text("Review",style: TextStyle(fontWeight: FontWeight.bold),),
+                    ],
+                  ),
                 ),
         
         
@@ -410,46 +449,57 @@ class _profileState extends State<profile> {
             Container(
               margin: EdgeInsets.only(left: 20,right: 20,),
               child: Row(
-        
+
                 children: [
                   Material(
                     elevation: 5,
                     borderRadius: BorderRadius.circular(30),
                     child: CircleAvatar(
                       backgroundColor: Colors.white,
-        
+
                         child: Icon(Icons.currency_bitcoin,size: 30,)),
                   ),
                   SizedBox(width: 10,),
-                  Text("Try Premium",style: TextStyle(
-                    fontSize: 25,
-                    fontWeight: FontWeight.bold,
-                  ),)
+                  GestureDetector(
+                    onTap: (){
+                      showComingSoonBottomSheet(context);
+
+                    },
+                    child: Text("Try Premium",style: TextStyle(
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
+                    ),),
+                  )
                 ],
               ),
             ),
             SizedBox(height: 10,),
         
         
-            Container(
-              margin: EdgeInsets.only(left: 20,right: 20,),
-              child: Row(
-        
-                children: [
-                  Material(
-                    elevation: 5,
-                    borderRadius: BorderRadius.circular(30),
-                    child: CircleAvatar(
-                        backgroundColor: Colors.white,
-        
-                        child: Icon(Icons.settings,size: 30,)),
-                  ),
-                  SizedBox(width: 10,),
-                  Text("Setting",style: TextStyle(
-                    fontSize: 25,
-                    fontWeight: FontWeight.bold,
-                  ),)
-                ],
+            GestureDetector(
+              onTap: (){
+                showComingSoonBottomSheet(context);
+              },
+              child: Container(
+                margin: EdgeInsets.only(left: 20,right: 20,),
+                child: Row(
+
+                  children: [
+                    Material(
+                      elevation: 5,
+                      borderRadius: BorderRadius.circular(30),
+                      child: CircleAvatar(
+                          backgroundColor: Colors.white,
+
+                          child: Icon(Icons.settings,size: 30,)),
+                    ),
+                    SizedBox(width: 10,),
+                    Text("Setting",style: TextStyle(
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
+                    ),)
+                  ],
+                ),
               ),
             ),
             SizedBox(height: 10,),
@@ -480,25 +530,30 @@ class _profileState extends State<profile> {
               ),
             ),
             SizedBox(height: 10,),
-            Container(
-              margin: EdgeInsets.only(left: 20,right: 20,),
-              child: Row(
-        
-                children: [
-                  Material(
-                    elevation: 5,
-                    borderRadius: BorderRadius.circular(30),
-                    child: CircleAvatar(
-                        backgroundColor: Colors.white,
-        
-                        child: Icon(Icons.contact_page_rounded,size: 30,)),
-                  ),
-                  SizedBox(width: 10,),
-                  Text("Term and Condition",style: TextStyle(
-                    fontSize: 25,
-                    fontWeight: FontWeight.bold,
-                  ),)
-                ],
+            GestureDetector(
+              onTap: (){
+                showComingSoonBottomSheet(context);
+              },
+              child: Container(
+                margin: EdgeInsets.only(left: 20,right: 20,),
+                child: Row(
+
+                  children: [
+                    Material(
+                      elevation: 5,
+                      borderRadius: BorderRadius.circular(30),
+                      child: CircleAvatar(
+                          backgroundColor: Colors.white,
+
+                          child: Icon(Icons.contact_page_rounded,size: 30,)),
+                    ),
+                    SizedBox(width: 10,),
+                    Text("Term and Condition",style: TextStyle(
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
+                    ),)
+                  ],
+                ),
               ),
             ),
             SizedBox(height: 40,),
